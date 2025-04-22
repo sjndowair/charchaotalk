@@ -28,6 +28,7 @@ const posts = [
 
 export default function PostPage({ params }: { params: { id: string } }) {
   const post = posts.find((p) => p.id === Number(params.id));
+  console.log(post);
 
   if (!post) {
     notFound();
