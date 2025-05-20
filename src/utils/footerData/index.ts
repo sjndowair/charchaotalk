@@ -1,0 +1,1 @@
+export const FOOTER_DATA: string[] = ["Powered by UP BIT.", "© 2024 RainyDay SoCial. All rights reserved."]
