@@ -3,10 +3,10 @@ import {ChartNoAxesColumnIncreasing, ChartNoAxesColumnDecreasing} from "lucide-r
 import { HEADER_DATA } from "@/utils/headerData";
 
 const Logo = () => {
-    return  ( <h1 className="text-2xl font-bold flex items-center hover:cursor-pointer">
-    <ChartNoAxesColumnIncreasing className="ml-2 text"/>
+    return  ( <h1 className="text-2xl font-bold flex items-center hover:cursor-pointer m-0">
+    <ChartNoAxesColumnIncreasing />
     {HEADER_DATA[0]}
-      <ChartNoAxesColumnDecreasing className="mr-2" />
+      <ChartNoAxesColumnDecreasing  />
   </h1>)
 }
 

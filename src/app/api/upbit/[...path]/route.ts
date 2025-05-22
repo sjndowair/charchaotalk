@@ -24,6 +24,8 @@ const generateJwtToken = (params?: Record<string, any>, isPostOrPut: boolean = f
     throw new Error('Upbit API keys are not configured.');
   }
 
+  //키값이 맞지 않으면 에러 선언해주는 코드
+
   const payload: any = {
     access_key: UPBIT_ACCESS_KEY,
     nonce: uuidv4(), // 매 요청마다 고유한 값
@@ -166,50 +168,50 @@ export async function GET(
  * 클라이언트의 POST 요청을 받아서 업비트 POST API로 중계합니다.
  * (예: 주문하기 API)
  */
-export async function POST(
-  request: Request, // 클라이언트의 Request 객체
-  { params }: { params: { path: string[] } } // [...path] 라우팅 파라미터
-) {
-  try {
-    const apiPath = params.path.join('/');
-    const requestBody = await request.json(); // 클라이언트에서 보낸 JSON 바디 파싱
+// export async function POST(
+//   request: Request, // 클라이언트의 Request 객체
+//   { params }: { params: { path: string[] } } // [...path] 라우팅 파라미터
+// ) {
+//   try {
+//     const apiPath = params.path.join('/');
+//     const requestBody = await request.json(); // 클라이언트에서 보낸 JSON 바디 파싱
 
-    // JWT 토큰 생성 (POST 요청 바디를 해싱하여 포함)
-    const token = generateJwtToken(requestBody, true); // true는 POST 요청임을 의미
+//     // JWT 토큰 생성 (POST 요청 바디를 해싱하여 포함)
+//     const token = generateJwtToken(requestBody, true); // true는 POST 요청임을 의미
 
-    // 업비트 API로 보낼 헤더 설정
-    const headers: HeadersInit = {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json', // POST 요청은 JSON Content-Type 필요
-      Accept: 'application/json',
-    };
+//     // 업비트 API로 보낼 헤더 설정
+//     const headers: HeadersInit = {
+//       Authorization: `Bearer ${token}`,
+//       'Content-Type': 'application/json', // POST 요청은 JSON Content-Type 필요
+//       Accept: 'application/json',
+//     };
 
-    // 업비트 API에 요청 보내기
-    const upbitResponse = await fetch(`${UPBIT_API_BASE_URL}/${apiPath}`, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(requestBody), // 업비트 API로 보낼 JSON 바디
-    });
+//     // 업비트 API에 요청 보내기
+//     const upbitResponse = await fetch(`${UPBIT_API_BASE_URL}/${apiPath}`, {
+//       method: 'POST',
+//       headers: headers,
+//       body: JSON.stringify(requestBody), // 업비트 API로 보낼 JSON 바디
+//     });
 
-    // 업비트 응답 확인 및 전달
-    if (!upbitResponse.ok) {
-      const errorData = await upbitResponse.json();
-      console.error('Upbit API Error Response (POST):', errorData);
-      return NextResponse.json(errorData, { status: upbitResponse.status });
-    }
+//     // 업비트 응답 확인 및 전달
+//     if (!upbitResponse.ok) {
+//       const errorData = await upbitResponse.json();
+//       console.error('Upbit API Error Response (POST):', errorData);
+//       return NextResponse.json(errorData, { status: upbitResponse.status });
+//     }
 
-    const data = await upbitResponse.json();
-    return NextResponse.json(data);
+//     const data = await upbitResponse.json();
+//     return NextResponse.json(data);
 
-  } catch (error: any) {
-    console.error('Error in POST /api/upbit proxy:', error);
-    return NextResponse.json(
-      { error: 'Failed to process POST request for Upbit API', details: error.message },
-      { status: 500 }
-    );
-  }
-}
+//   } catch (error: any) {
+//     console.error('Error in POST /api/upbit proxy:', error);
+//     return NextResponse.json(
+//       { error: 'Failed to process POST request for Upbit API', details: error.message },
+//       { status: 500 }
+//     );
+//   }
+// }
 
-// DELETE, PUT 등 다른 HTTP 메서드도 POST 함수와 유사하게 구현할 수 있습니다.
-// 요청 바디가 없다면 request.json() 부분을 제외하고,
-// JWT 생성 시 해당 메서드에 맞는 파라미터 해싱 규칙을 적용하면 됩니다.
+// // DELETE, PUT 등 다른 HTTP 메서드도 POST 함수와 유사하게 구현할 수 있습니다.
+// // 요청 바디가 없다면 request.json() 부분을 제외하고,
+// // JWT 생성 시 해당 메서드에 맞는 파라미터 해싱 규칙을 적용하면 됩니다.
